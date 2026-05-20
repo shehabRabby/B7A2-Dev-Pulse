@@ -3,7 +3,7 @@ import config from "./config/index";
 import { initDB } from "./db/index";
 
 const main = () => {
-  // Connect to Neon DB & create tables
+  // Connect to neonDB & create tables
   initDB();
 
   // App listener
