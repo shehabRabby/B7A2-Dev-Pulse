@@ -41,13 +41,24 @@ const createIssue = async (
       creator_id: creatorId,
     };
 
-    const result = await IssueServices.createIssueIntoDB(fullPayload);
+    const dbResult = await IssueServices.createIssueIntoDB(fullPayload);
+
+    const formattedData = {
+      id: dbResult.id,
+      title: dbResult.title,
+      description: dbResult.description,
+      type: dbResult.type,
+      status: dbResult.status,
+      reporter_id: dbResult.creator_id,
+      created_at: dbResult.created_at,
+      updated_at: dbResult.updated_at,
+    };
 
     sendResponse(res, {
       statusCode: StatusCodes.CREATED,
       success: true,
       message: "Issue created successfully",
-      data: result,
+      data: formattedData,
     });
   } catch (error) {
     next(error);
