@@ -7,7 +7,6 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const userData = req.body;
 
-    // রিকোয়ারমেন্ট অনুযায়ী ইমেইল ও পাসওয়ার্ড দেওয়া আছে কিনা তা চেক করা (বেসিক ভ্যালিডেশন)
     if (!userData.email || !userData.password || !userData.name) {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
@@ -40,6 +39,43 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const loginData = req.body;
+
+    if (!loginData.email || !loginData.password) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "Validation error",
+        errors: "Email and password are required."
+      });
+      return;
+    }
+
+    const result = await UserServices.loginUserFromDB(loginData);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK, 
+      success: true,
+      message: "Login successful",
+      data: {
+        token: result.token,
+        user: result.user,
+      },
+    });
+  } catch (error: any) {
+    if (error.message === "Invalid email or password") {
+      res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Authentication failed",
+        errors: "Invalid email or password"
+      });
+      return;
+    }
+    next(error);
+  }
+};
+
 export const UserController = {
-  registerUser,
+  registerUser,loginUser
 };
