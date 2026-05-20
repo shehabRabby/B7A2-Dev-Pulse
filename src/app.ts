@@ -1,7 +1,11 @@
-import express, { type Application, type Request, type Response } from "express";
+import express, {
+  type Application,
+  type Request,
+  type Response,
+} from "express";
 import globalErrorHandler from "./middleware/globalErrorHandler";
 import { UserRoutes } from "./modules/user/user.router";
-
+import { IssueRoutes } from "./modules/issue/issue.router";
 
 const app: Application = express();
 
@@ -9,7 +13,6 @@ const app: Application = express();
 app.use(express.json());
 app.use(express.text());
 
-// Normal testing
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: "Server on now",
@@ -17,10 +20,10 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-// Application all routes here
+// all routes
 app.use("/api/auth", UserRoutes);
+app.use("/api/issues", IssueRoutes);
 
-// handle all global error
 app.use(globalErrorHandler);
 
 export default app;

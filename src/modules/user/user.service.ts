@@ -18,10 +18,8 @@ const createUserIntoDB = async (
   `;
 
   const values = [name, email, hashedPassword, role || "contributor"];
-
+  
   const result = await pool.query(queryText, values);
-
-  // return full data except password
   return result.rows[0];
 };
 
