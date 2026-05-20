@@ -4,15 +4,14 @@ import express, {
   type Response,
 } from "express";
 import { Pool } from "pg";
+import config from "./config/index.js";
 
 const app: Application = express();
-const port = 5000;
 app.use(express.json());
 app.use(express.text());
 
 const pool = new Pool({
-  connectionString:
-    "postgresql://neondb_owner:npg_ENR35pjwYIcs@ep-nameless-base-aqci52q3-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
+  connectionString: config.connection_string,
 });
 
 const initDB = async () => {
@@ -66,6 +65,6 @@ app.post("/", async (req: Request, res: Response) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+app.listen(config.port, () => {
+  console.log(`Server listening on port ${config.port}`);
 });
