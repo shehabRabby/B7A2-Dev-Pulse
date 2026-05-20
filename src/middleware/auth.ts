@@ -26,7 +26,7 @@ const auth = (...requiredRoles: string[]) => {
         return;
       }
 
-      // 'Bearer <token>' অথবা সরাসরি শুধু টোকেন—দুটিই স্মার্টলি হ্যান্ডেল করা
+      // 'Bearer token
       let token: string | undefined;
       if (authHeader.startsWith("Bearer ")) {
         token = authHeader.split(" ")[1];
@@ -34,7 +34,7 @@ const auth = (...requiredRoles: string[]) => {
         token = authHeader;
       }
 
-      // টোকেনটি খালি কিনা নিশ্চিত হওয়া
+      
       if (!token || token.trim() === "") {
         res.status(StatusCodes.UNAUTHORIZED).json({
           success: false,
