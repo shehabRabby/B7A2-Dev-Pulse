@@ -7,10 +7,10 @@ const createUserIntoDB = async (
 ): Promise<Omit<TUser, "password">> => {
   const { name, email, password, role } = userData;
 
-  // ১. পাসওয়ার্ড হ্যাশ করা (salt rounds 8-12 এর মধ্যে ১০ বেস্ট)
+
   const hashedPassword = await bcrypt.hash(password!, 10);
 
-  // ২. Raw SQL কুয়েরি দিয়ে ডাটা ইনসার্ট করা
+
   const queryText = `
     INSERT INTO users (name, email, password, role)
     VALUES ($1, $2, $3, $4)
@@ -21,7 +21,7 @@ const createUserIntoDB = async (
 
   const result = await pool.query(queryText, values);
 
-  // ৩. রিকোয়ারমেন্ট অনুযায়ী পাসওয়ার্ড ছাড়া শুধুমাত্র বাকি ডাটা রিটার্ন করা
+  // return full data except password
   return result.rows[0];
 };
 

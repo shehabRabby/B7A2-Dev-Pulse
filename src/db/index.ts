@@ -1,5 +1,4 @@
 import { Pool } from "pg";
-import pg from "pg";
 import config from "../config/index.js";
 
 
