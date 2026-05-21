@@ -66,57 +66,58 @@ CREATE TABLE issues (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+  ---
+
+  ## 🛣️ API Endpoints Roadmap
+
+### 🔐 Authentication Module (`/api/auth`)
+
+| Method | Endpoint | Access Level | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/signup` | 🌐 Public | Registers a new user account with explicit roles (`contributor` or `maintainer`). |
+| `POST` | `/api/auth/login` | 🌐 Public | Validates user credentials and generates a JWT authorization bearer token. |
+
+### 🐞 Issues Module (`/api/issues`)
+
+| Method | Endpoint | Access Level | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/issues` | ⚒️ Contributor | **[Protected]** Instantiates a fresh tracking issue. *(Title is mandatory, Description must be ≥ 20 characters)*. |
+| `GET` | `/api/issues` | 🌐 Public | **[Public]** Fetches global issue lists. *(Supports optional filtering query parameters: `type`, `status` and `sort=newest/oldest`)*. |
+| `GET` | `/api/issues/:id` | 🌐 Public | **[Public]** Returns details of a specific issue alongside a clean reporter user profile mapping. |
+| `PATCH` | `/api/issues/:id` | ⚒️ Contributor / 🛡️ Maintainer | **[Protected]** Updates issue metadata. <br>• **Contributors:** Can edit their own issue text *(Only if status is `open`)*.<br>• **Maintainers:** Can update metadata or transition the workflow `status` independently. |
+| `DELETE` | `/api/issues/:id` | 🛡️ Maintainer | **[Protected]** Destroys an issue record permanently from the database logs. |
+
+
+  ---
+
+                        ⚙️ Local Installation & Setup Guide
+
+## 📋 Prerequisites
+    - Node.js (v18.x or higher)
+    - A PostgreSQL instance (e.g., NeonDB)
+
+  ---
+
+## 🏃 Step-by-Step Setup
+1. Clone and Install
+    - git clone <your-repository-url>
+    - cd <your-project-folder>
+    - npm install
+
+2. Environment Configuration 
+   
+   - PORT=5000
+   - DATABASE_URL=postgres://<username>:<password>@<host>/<database_name>?sslmode=require
+   - JWT_SECRET=your_super_secure_random_jwt_secret_key
+   - NODE_ENV=development
+
+3. Database Initialization
+   - Run the SQL scripts provided in the Database Schema section above inside your NeonDB SQL terminal to create the tables.
+
+4. Running the Application
+   - Development Mode: npm run dev
+   - Build Project: npm run build
+   - Production Start: npm start
 
 
 
-
-⚙️ Local Installation & Setup Guide
-📋 Prerequisites
-Node.js (v18.x or higher)
-
-A PostgreSQL instance (e.g., NeonDB)
-
-🏃 Step-by-Step Setup
-Clone and Install:
-
-git clone <your-repository-url>
-cd <your-project-folder>
-npm install
-
-
-Environment Configuration:
-Create a .env file in the root directory:
-
-PORT=5000
-DATABASE_URL=postgres://<username>:<password>@<host>/<database_name>?sslmode=require
-JWT_SECRET=your_jwt_secret_key
-NODE_ENV=development
-
-Database Initialization:
-Run the SQL scripts provided in the Database Schema section above inside your NeonDB SQL terminal
-
-
-
-Running the Application:
-
-Development Mode: npm run dev
-Build Project: npm run build
-Production Start: npm start
-
-
-API Endpoints Summary
-Auth Module (/api/auth)
-POST /signup - Register a new user (contributor or maintainer).
-
-POST /login - Authenticate credentials and receive a JWT token.
-
-Issues Module (/api/issues)
-POST / - Create a new issue (Contributor only | description ≥ 20 characters).
-
-GET / - Get all issues (Public | Supports filtering by type, status and sorting by newest/oldest).
-
-GET /:id - Get a single issue by ID with its reporter's clean profile (Public).
-
-PATCH /:id - Update issue text (Contributor: own issues only) or change workflow status (Maintainer only).
-
-DELETE /:id - Permanently delete an issue (Maintainer only).
