@@ -5,5 +5,8 @@ import auth from "../../middleware/auth";
 const router = express.Router();
 
 router.post("/", auth("contributor"), IssueController.createIssue);
+router.get("/", IssueController.getAllIssues);
+router.get("/:id", IssueController.getSingleIssue);
+router.patch("/:id", auth("maintainer", "contributor"), IssueController.updateIssue);
 
 export const IssueRoutes = router;
