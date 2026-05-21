@@ -39,6 +39,30 @@ The system maintains strict workflow permissions separating frontline reporters 
 
 ---
 
+ ## 🛣️ API Endpoints Roadmap
+
+### 🔐 Authentication Module (`/api/auth`)
+
+| Method | Endpoint | Access Level | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/signup` | 🌐 Public | Registers a new user account with explicit roles (`contributor` or `maintainer`). |
+| `POST` | `/api/auth/login` | 🌐 Public | Validates user credentials and generates a JWT authorization bearer token. |
+
+### 🐞 Issues Module (`/api/issues`)
+
+| Method | Endpoint | Access Level | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/issues` | ⚒️ Contributor | **[Protected]** Instantiates a fresh tracking issue. *(Title is mandatory, Description must be ≥ 20 characters)*. |
+| `GET` | `/api/issues` | 🌐 Public | **[Public]** Fetches global issue lists. *(Supports optional filtering query parameters: `type`, `status` and `sort=newest/oldest`)*. |
+| `GET` | `/api/issues/:id` | 🌐 Public | **[Public]** Returns details of a specific issue alongside a clean reporter user profile mapping. |
+| `PATCH` | `/api/issues/:id` | ⚒️ Contributor / 🛡️ Maintainer | **[Protected]** Updates issue metadata. <br>• **Contributors:** Can edit their own issue text *(Only if status is `open`)*.<br>• **Maintainers:** Can update metadata or transition the workflow `status` independently. |
+| `DELETE` | `/api/issues/:id` | 🛡️ Maintainer | **[Protected]** Destroys an issue record permanently from the database logs. |
+
+
+---
+
+
+
 ## 📋 Database Schema
 
 Execute the following relational blueprints inside your database console or NeonDB SQL editor to configure the architecture:
@@ -66,37 +90,12 @@ CREATE TABLE issues (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-  ---
-
-  ## 🛣️ API Endpoints Roadmap
-
-### 🔐 Authentication Module (`/api/auth`)
-
-| Method | Endpoint | Access Level | Description |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/signup` | 🌐 Public | Registers a new user account with explicit roles (`contributor` or `maintainer`). |
-| `POST` | `/api/auth/login` | 🌐 Public | Validates user credentials and generates a JWT authorization bearer token. |
-
-### 🐞 Issues Module (`/api/issues`)
-
-| Method | Endpoint | Access Level | Description |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/issues` | ⚒️ Contributor | **[Protected]** Instantiates a fresh tracking issue. *(Title is mandatory, Description must be ≥ 20 characters)*. |
-| `GET` | `/api/issues` | 🌐 Public | **[Public]** Fetches global issue lists. *(Supports optional filtering query parameters: `type`, `status` and `sort=newest/oldest`)*. |
-| `GET` | `/api/issues/:id` | 🌐 Public | **[Public]** Returns details of a specific issue alongside a clean reporter user profile mapping. |
-| `PATCH` | `/api/issues/:id` | ⚒️ Contributor / 🛡️ Maintainer | **[Protected]** Updates issue metadata. <br>• **Contributors:** Can edit their own issue text *(Only if status is `open`)*.<br>• **Maintainers:** Can update metadata or transition the workflow `status` independently. |
-| `DELETE` | `/api/issues/:id` | 🛡️ Maintainer | **[Protected]** Destroys an issue record permanently from the database logs. |
-
-
-  ---
 
                         ⚙️ Local Installation & Setup Guide
 
 ## 📋 Prerequisites
     - Node.js (v18.x or higher)
     - A PostgreSQL instance (e.g., NeonDB)
-
-  ---
 
 ## 🏃 Step-by-Step Setup
 1. Clone and Install
