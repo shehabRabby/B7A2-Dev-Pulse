@@ -3,11 +3,15 @@ import express, {
   type Request,
   type Response,
 } from "express";
+import cors from "cors";
 import globalErrorHandler from "./middleware/globalErrorHandler";
 import { UserRoutes } from "./modules/user/user.router";
 import { IssueRoutes } from "./modules/issue/issue.router";
 
 const app: Application = express();
+
+//cors
+app.use(cors({ origin: "*" }));
 
 // parser middleware
 app.use(express.json());

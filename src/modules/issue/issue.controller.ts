@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { IssueServices } from "./issue.service.js";
-import sendResponse from "../../utils/sendResponse.js";
+import { IssueServices } from "./issue.service";
+import sendResponse from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
 
 interface AuthenticatedRequest extends Request {

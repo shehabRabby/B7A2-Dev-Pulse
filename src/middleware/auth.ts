@@ -1,7 +1,7 @@
 import { type Request, type Response, type NextFunction } from "express";
 import jwt, { type Secret } from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
-import config from "../config/index.js";
+import config from "../config/index";
 
 export interface AuthenticatedRequest extends Request {
   user?: {

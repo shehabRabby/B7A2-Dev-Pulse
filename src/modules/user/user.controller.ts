@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { UserServices } from "./user.service.js";
-import sendResponse from "../../utils/sendResponse.js";
+import { UserServices } from "./user.service";
+import sendResponse from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
 
 const registerUser = async (req: Request, res: Response, next: NextFunction) => {
