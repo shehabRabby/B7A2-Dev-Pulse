@@ -210,7 +210,6 @@ const deleteIssueFromDB = async (issueId: string) => {
   if (result.rows.length === 0) {
     return false;
   }
-
   return true;
 };
 

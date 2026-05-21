@@ -16,7 +16,7 @@ app.use(express.text());
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: "Server on now",
-    author: "Shehab Al Rabby",
+    author: "Devloper Shehab",
   });
 });
 

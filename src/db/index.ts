@@ -33,7 +33,7 @@ export const initDB = async () => {
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
   );
 `);
-    console.log("✓ Database connected successfully");
+    console.log("Database connected successfully");
   } catch (error) {
     console.error("Error initializing database tables:", error);
   }

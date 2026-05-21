@@ -87,8 +87,8 @@ const getAllIssues = async (
 ) => {
   try {
     const query = req.query;
-
     const result = await IssueServices.getAllIssuesFromDB(query);
+    
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
@@ -135,7 +135,6 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const updateData = req.body;
     const loggedInUser = (req as any).user;
-
   
     if (!loggedInUser) {
       res.status(StatusCodes.UNAUTHORIZED).json({
@@ -146,7 +145,6 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-   
     if (updateData.title && updateData.title.length > 150) {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
@@ -255,7 +253,6 @@ const deleteIssue = async (req: Request, res: Response, next: NextFunction) => {
       });
       return;
     }
-
     res.status(StatusCodes.OK).json({
       success: true,
       message: "Issue deleted successfully",

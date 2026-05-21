@@ -18,7 +18,7 @@ const createUserIntoDB = async (
   `;
 
   const values = [name, email, hashedPassword, role || "contributor"];
-  
+
   const result = await pool.query(queryText, values);
   return result.rows[0];
 };
@@ -26,12 +26,13 @@ const createUserIntoDB = async (
 const loginUserFromDB = async (loginData: any) => {
   const { email, password } = loginData;
 
-  const result = await pool.query(`
-    SELECT * FROM users WHERE email = $1;`, 
-    [email]);
+  const result = await pool.query(
+    `
+    SELECT * FROM users WHERE email = $1;`,
+    [email],
+  );
 
   const user = result.rows[0];
-
 
   if (!user) {
     throw new Error("Invalid email or password");
@@ -42,7 +43,7 @@ const loginUserFromDB = async (loginData: any) => {
     throw new Error("Invalid email or password");
   }
 
-  // Generate jwt token 
+  // Generate jwt token
   const jwtPayload = {
     id: user.id,
     name: user.name,

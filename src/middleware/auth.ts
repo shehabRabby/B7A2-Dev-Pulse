@@ -30,7 +30,7 @@ const auth = (...requiredRoles: string[]) => {
         return;
       }
 
-      // 'Bearer token' extraction
+      // Bearer token 
       let token: string | undefined;
       if (authHeader.startsWith("Bearer ")) {
         token = authHeader.split(" ")[1];

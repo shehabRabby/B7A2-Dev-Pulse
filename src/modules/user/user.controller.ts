@@ -18,7 +18,6 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
 
     // create user into Database
     const result = await UserServices.createUserIntoDB(userData);
-
     
     sendResponse(res, {
       statusCode: StatusCodes.CREATED,
