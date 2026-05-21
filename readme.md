@@ -61,7 +61,7 @@ The system maintains strict workflow permissions separating frontline reporters 
 
 ---
 
-  ⚙️ Local Installation & Setup Guide
+###  ⚙️ Local Installation & Setup Guide
 
 ## 📋 Prerequisites
     - Node.js (v18.x or higher)
@@ -73,16 +73,16 @@ The system maintains strict workflow permissions separating frontline reporters 
     - cd <your-project-folder>
     - npm install
 
-  # Environment Configuration 
+ # Environment Configuration 
    - PORT=5000
    - DATABASE_URL=postgres://<username>:<password>@<host>/<database_name>?sslmode=require
    - JWT_SECRET=your_super_secure_random_jwt_secret_key
    - NODE_ENV=development
 
-  # Database Initialization
+ # Database Initialization
    - Run the SQL scripts provided in the Database Schema section above inside your NeonDB SQL terminal to create the tables.
 
-  # Running the Application
+ # Running the Application
    - Development Mode: npm run dev
    - Build Project: npm run build
    - Production Start: npm start
@@ -115,8 +115,4 @@ CREATE TABLE issues (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-
-                      
-
 

@@ -22,7 +22,7 @@ const createIssue = async (
     // login user id from token
     const creatorId = req.user?.id;
 
-    // ১. প্রথমে চেক করা হচ্ছে সব রিকোয়ার্ড ফিল্ড বডিতে আছে কিনা (priority বাদ দেওয়া হয়েছে)
+  
     if (!issueData.title || !issueData.description || !issueData.type) {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
@@ -32,7 +32,7 @@ const createIssue = async (
       return;
     }
 
-    // ২. এবার ক্যারেক্টার লেন্থ ভ্যালিডেশন (রিকোয়ারমেন্ট অনুযায়ী)
+    
     if (issueData.title.length > 150) {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
@@ -138,7 +138,7 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
     const updateData = req.body;
     const loggedInUser = (req as any).user;
 
-    // ১. সেফটি চেক: যদি কোনো কারণে টোকেন ছাড়া রিকোয়েস্ট চলে আসে
+  
     if (!loggedInUser) {
       res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
@@ -148,7 +148,7 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-    // ২. ক্যারেক্টার লেন্থ ভ্যালিডেশন চেক (রিকোয়ারমেন্ট অনুযায়ী)
+   
     if (updateData.title && updateData.title.length > 150) {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
@@ -173,7 +173,7 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
       updateData,
     );
 
-    // ৩. সার্ভিস থেকে আসা বিজনেস লজিক এরর হ্যান্ডলিং
+    
     if (result.errorType === "ISSUE_NOT_FOUND") {
       res.status(StatusCodes.NOT_FOUND).json({
         success: false,
@@ -214,7 +214,7 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
 
     const dbData = result.data;
 
-    // ৪. ডাটাবেজ রেসপন্স সেফটি গার্ড চেক
+   
     if (!dbData) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
@@ -224,7 +224,7 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-    // ৫. সাকসেস রেসপন্স ফরম্যাটিং (রিকোয়ারমেন্ট শিটের সাথে হুবহু মিল রেখে)
+   
     const formattedData = {
       id: dbData.id,
       title: dbData.title,
