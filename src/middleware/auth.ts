@@ -3,7 +3,8 @@ import jwt, { type Secret } from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
 import config from "../config/index.js";
 
-interface CustomRequest extends Request {
+// 🎯 ইন্টারফেসের নাম AuthenticatedRequest করা হলো যাতে কন্ট্রোলারের সাথে ম্যাচ করে
+export interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
     name: string;
@@ -12,7 +13,11 @@ interface CustomRequest extends Request {
 }
 
 const auth = (...requiredRoles: string[]) => {
-  return async (req: CustomRequest, res: Response, next: NextFunction) => {
+  return async (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       // check token header
       const authHeader = req.headers.authorization;
@@ -26,7 +31,7 @@ const auth = (...requiredRoles: string[]) => {
         return;
       }
 
-      // 'Bearer token
+      // 'Bearer token' extraction
       let token: string | undefined;
       if (authHeader.startsWith("Bearer ")) {
         token = authHeader.split(" ")[1];
@@ -34,7 +39,6 @@ const auth = (...requiredRoles: string[]) => {
         token = authHeader;
       }
 
-      
       if (!token || token.trim() === "") {
         res.status(StatusCodes.UNAUTHORIZED).json({
           success: false,
@@ -45,7 +49,11 @@ const auth = (...requiredRoles: string[]) => {
       }
 
       // verify token
-      const decoded = jwt.verify(token, config.jwt_secret as Secret) as any;
+      const decoded = jwt.verify(token, config.jwt_secret as Secret) as {
+        id: number;
+        name: string;
+        role: string;
+      };
 
       // check role
       if (requiredRoles.length && !requiredRoles.includes(decoded.role)) {
@@ -62,6 +70,7 @@ const auth = (...requiredRoles: string[]) => {
 
       next();
     } catch (error) {
+      // JWT expired বা invalid হলে সরাসরি এই ব্লকে আসবে এবং সঠিক এরর ফরম্যাট রিটার্ন করবে
       res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
         message: "Authentication failed",

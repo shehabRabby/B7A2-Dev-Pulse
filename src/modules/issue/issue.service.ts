@@ -2,9 +2,10 @@ import { pool } from "../../db/index";
 import type { IIssue } from "./issue.interface";
 
 const createIssueIntoDB = async (payload: IIssue) => {
+  // 🎯 priority বাদ দিয়ে ৪টি ফিল্ডের জন্য ক্লিন SQL কুয়েরি
   const queryText = `
-    INSERT INTO issues (title, description, type, priority, creator_id)
-    VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO issues (title, description, type, creator_id)
+    VALUES ($1, $2, $3, $4)
     RETURNING *;
   `;
 
@@ -12,7 +13,6 @@ const createIssueIntoDB = async (payload: IIssue) => {
     payload.title,
     payload.description,
     payload.type,
-    payload.priority,
     payload.creator_id,
   ];
 
@@ -31,18 +31,21 @@ const getAllIssuesFromDB = async (query: {
   const queryParams: any[] = [];
   let paramCounter = 1;
 
+  // ১. ডাইনামিক ফিল্টারিং (Type: bug or feature_request)
   if (type) {
     queryText += ` AND type = $${paramCounter}`;
     queryParams.push(type);
     paramCounter++;
   }
 
+  // ২. ডাইনামিক ফিল্টারিং (Status: open, in_progress, resolved)
   if (status) {
     queryText += ` AND status = $${paramCounter}`;
     queryParams.push(status);
     paramCounter++;
   }
 
+  // ৩. সর্টিং হ্যান্ডলার (Newest or Oldest)
   if (sort === "oldest") {
     queryText += ` ORDER BY created_at ASC;`;
   } else {
@@ -56,6 +59,7 @@ const getAllIssuesFromDB = async (query: {
     return [];
   }
 
+  // 🎯 রিকোয়ারমেন্টের শর্ত অনুযায়ী JOIN ছাড়া ব্যাচ কুয়েরির মাধ্যমে রিপোর্টার ডাটা ফেচ করা
   const creatorIds = [...new Set(issues.map((issue) => issue.creator_id))];
   const placeholders = creatorIds.map((_, index) => `$${index + 1}`).join(", ");
   const userQueryText = `SELECT id, name, role FROM users WHERE id IN (${placeholders});`;
@@ -68,13 +72,20 @@ const getAllIssuesFromDB = async (query: {
     userMap[user.id] = user;
   });
 
+  // 🎯 ৪. ফাইনাল আউটপুট ফরম্যাটিং (হুবহু রিকোয়ারমেন্টের রেসপন্স অবজেক্টের স্ট্রাকচার)
   const finalIssues = issues.map((issue) => ({
     id: issue.id,
     title: issue.title,
     description: issue.description,
     type: issue.type,
     status: issue.status,
-    reporter: userMap[issue.creator_id] || null,
+    reporter: userMap[issue.creator_id]
+      ? {
+          id: userMap[issue.creator_id].id,
+          name: userMap[issue.creator_id].name,
+          role: userMap[issue.creator_id].role,
+        }
+      : null,
     created_at: issue.created_at,
     updated_at: issue.updated_at,
   }));
@@ -83,6 +94,7 @@ const getAllIssuesFromDB = async (query: {
 };
 
 const getSingleIssueFromDB = async (id: string) => {
+  // ১. নির্দিষ্ট আইডি দিয়ে ইস্যুর ডাটা রিট্রিভ করা
   const queryText = `SELECT * FROM issues WHERE id = $1;`;
   const result = await pool.query(queryText, [id]);
   const issue = result.rows[0];
@@ -91,10 +103,12 @@ const getSingleIssueFromDB = async (id: string) => {
     return null;
   }
 
+  // ২. রিকোয়ারমেন্ট অনুযায়ী JOIN ছাড়া আলাদা কোয়েরি দিয়ে ইউজারের (Reporter) ডাটা রিট্রিভ করা
   const userQueryText = `SELECT id, name, role FROM users WHERE id = $1;`;
   const userResult = await pool.query(userQueryText, [issue.creator_id]);
   const user = userResult.rows[0];
 
+  // ৩. ফাইনাল আউটপুট রেসপন্স অবজেক্ট (রিকোয়ারমেন্টের ৫ নম্বর এন্ডপয়েন্টের হুবহু ফরম্যাট)
   const formattedIssue = {
     id: issue.id,
     title: issue.title,
@@ -118,7 +132,12 @@ const getSingleIssueFromDB = async (id: string) => {
 const updateIssueInDB = async (
   issueId: string,
   user: { id: number; role: string },
-  payload: { title?: string; description?: string; type?: string },
+  payload: {
+    title?: string;
+    description?: string;
+    type?: string;
+    status?: string;
+  },
 ) => {
   // ১. ডাটাবেজ থেকে ইস্যু খুঁজে বের করা
   const issueCheck = await pool.query(`SELECT * FROM issues WHERE id = $1;`, [
@@ -131,16 +150,24 @@ const updateIssueInDB = async (
 
   const issue = issueCheck.rows[0];
 
+  // ২. রোল-বেসড পারমিশন ও ওয়ার্কফ্লো স্ট্যাটাস ভ্যালিডেশন
   if (user.role === "contributor") {
+    // কন্ট্রিবিউটর শুধুমাত্র নিজের ইস্যু আপডেট করতে পারবে
     if (issue.creator_id === user.id) {
+      // কন্ট্রিবিউটর শুধুমাত্র 'open' স্ট্যাটাসে থাকা ইস্যুই আপডেট করতে পারবে
       if (issue.status !== "open") {
         return { errorType: "ISSUE_NOT_OPEN", data: null };
+      }
+      // কন্ট্রিবিউটর নিজে ইস্যুর স্ট্যাটাস চেঞ্জ করতে পারবে না
+      if (payload.status) {
+        return { errorType: "UNAUTHORIZED_ACTION", data: null };
       }
     } else {
       return { errorType: "UNAUTHORIZED_ACTION", data: null };
     }
   }
 
+  // ৩. ডাইনামিক কুয়েরি বিল্ডার (SQL injection নিরাপদ রাখতে)
   const fields: string[] = [];
   const values: any[] = [];
   let paramCounter = 1;
@@ -161,10 +188,19 @@ const updateIssueInDB = async (
     paramCounter++;
   }
 
+  // 🎯 মেইনটেইনার স্বাধীনভাবে স্ট্যাটাস চেঞ্জ করতে পারবে (রিকোয়ারমেন্টের শর্ত)
+  if (payload.status && user.role === "maintainer") {
+    fields.push(`status = $${paramCounter}`);
+    values.push(payload.status);
+    paramCounter++;
+  }
+
+  // যদি বডিতে কোনো আপডেট করার মতো ডাটা না থাকে
   if (fields.length === 0) {
     return { errorType: "NO_DATA_PROVIDED", data: null };
   }
 
+  // অটোমেটিক্যালি updated_at টাইমস্ট্যাম্প রিফ্রেশ করা
   fields.push(`updated_at = CURRENT_TIMESTAMP`);
 
   const queryText = `
