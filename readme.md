@@ -1,4 +1,4 @@
-# 📋 Issue Tracker System API
+# 📋 DevPulse: Issue Tracker System API
 
 ![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?style=flat-sounding&logo=node.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Strict-007ACC?style=flat-sounding&logo=typescript&logoColor=white)
