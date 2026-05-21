@@ -10,7 +10,7 @@ A lightweight, high-performance RESTful API designed for managing software devel
 ---
 
 ## 🚀 Live Links
-* **Production API URL:** [Live Link coming soon... hetre]
+* **Production API URL:** [https://issue-tracker-api-lilac.vercel.app/]
 * **Database Host:** NeonDB (Serverless Cloud PostgreSQL)
 
 ---
