@@ -207,9 +207,34 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const deleteIssue = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+
+    const isDeleted = await IssueServices.deleteIssueFromDB(id as string);
+
+    if (!isDeleted) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "Resource not found",
+        errors: `Issue with ID ${id} does not exist.`,
+      });
+      return;
+    }
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Issue deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const IssueController = {
   createIssue,
   getAllIssues,
   getSingleIssue,
   updateIssue,
+  deleteIssue,
 };
