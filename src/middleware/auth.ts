@@ -3,7 +3,6 @@ import jwt, { type Secret } from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
 import config from "../config/index.js";
 
-// 🎯 ইন্টারফেসের নাম AuthenticatedRequest করা হলো যাতে কন্ট্রোলারের সাথে ম্যাচ করে
 export interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
@@ -70,7 +69,6 @@ const auth = (...requiredRoles: string[]) => {
 
       next();
     } catch (error) {
-      // JWT expired বা invalid হলে সরাসরি এই ব্লকে আসবে এবং সঠিক এরর ফরম্যাট রিটার্ন করবে
       res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
         message: "Authentication failed",

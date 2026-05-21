@@ -139,7 +139,7 @@ const updateIssueInDB = async (
     status?: string;
   },
 ) => {
-  // ১. ডাটাবেজ থেকে ইস্যু খুঁজে বের করা
+ 
   const issueCheck = await pool.query(`SELECT * FROM issues WHERE id = $1;`, [
     issueId,
   ]);
@@ -150,15 +150,11 @@ const updateIssueInDB = async (
 
   const issue = issueCheck.rows[0];
 
-  // ২. রোল-বেসড পারমিশন ও ওয়ার্কফ্লো স্ট্যাটাস ভ্যালিডেশন
   if (user.role === "contributor") {
-    // কন্ট্রিবিউটর শুধুমাত্র নিজের ইস্যু আপডেট করতে পারবে
     if (issue.creator_id === user.id) {
-      // কন্ট্রিবিউটর শুধুমাত্র 'open' স্ট্যাটাসে থাকা ইস্যুই আপডেট করতে পারবে
       if (issue.status !== "open") {
         return { errorType: "ISSUE_NOT_OPEN", data: null };
       }
-      // কন্ট্রিবিউটর নিজে ইস্যুর স্ট্যাটাস চেঞ্জ করতে পারবে না
       if (payload.status) {
         return { errorType: "UNAUTHORIZED_ACTION", data: null };
       }

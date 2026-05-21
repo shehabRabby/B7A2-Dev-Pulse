@@ -10,7 +10,7 @@ A lightweight, high-performance RESTful API designed for managing software devel
 ---
 
 ## 🚀 Live Links
-* **Production API URL:** [Live Link coming soon...]
+* **Production API URL:** [Live Link coming soon... hetre]
 * **Database Host:** NeonDB (Serverless Cloud PostgreSQL)
 
 ---
@@ -61,7 +61,34 @@ The system maintains strict workflow permissions separating frontline reporters 
 
 ---
 
+  ⚙️ Local Installation & Setup Guide
 
+## 📋 Prerequisites
+    - Node.js (v18.x or higher)
+    - A PostgreSQL instance (e.g., NeonDB)
+
+## 🏃 Step-by-Step Setup
+1. Clone and Install
+    - git clone <your-repository-url>
+    - cd <your-project-folder>
+    - npm install
+
+2. Environment Configuration 
+   
+   - PORT=5000
+   - DATABASE_URL=postgres://<username>:<password>@<host>/<database_name>?sslmode=require
+   - JWT_SECRET=your_super_secure_random_jwt_secret_key
+   - NODE_ENV=development
+
+3. Database Initialization
+   - Run the SQL scripts provided in the Database Schema section above inside your NeonDB SQL terminal to create the tables.
+
+4. Running the Application
+   - Development Mode: npm run dev
+   - Build Project: npm run build
+   - Production Start: npm start
+
+---
 
 ## 📋 Database Schema
 
@@ -91,32 +118,6 @@ CREATE TABLE issues (
 );
 
 
-                        ⚙️ Local Installation & Setup Guide
-
-## 📋 Prerequisites
-    - Node.js (v18.x or higher)
-    - A PostgreSQL instance (e.g., NeonDB)
-
-## 🏃 Step-by-Step Setup
-1. Clone and Install
-    - git clone <your-repository-url>
-    - cd <your-project-folder>
-    - npm install
-
-2. Environment Configuration 
-   
-   - PORT=5000
-   - DATABASE_URL=postgres://<username>:<password>@<host>/<database_name>?sslmode=require
-   - JWT_SECRET=your_super_secure_random_jwt_secret_key
-   - NODE_ENV=development
-
-3. Database Initialization
-   - Run the SQL scripts provided in the Database Schema section above inside your NeonDB SQL terminal to create the tables.
-
-4. Running the Application
-   - Development Mode: npm run dev
-   - Build Project: npm run build
-   - Production Start: npm start
-
+                      
 
 
