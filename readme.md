@@ -39,7 +39,7 @@ The system maintains strict workflow permissions separating frontline reporters 
 
 ---
 
- ## 🛣️ API Endpoints Roadmap
+ # 🛣️ API Endpoints Roadmap
 
 ### 🔐 Authentication Module (`/api/auth`)
 
@@ -61,35 +61,35 @@ The system maintains strict workflow permissions separating frontline reporters 
 
 ---
 
-###  ⚙️ Local Installation & Setup Guide
+#  ⚙️ Local Installation & Setup Guide
 
-## 📋 Prerequisites
+# 📋 Prerequisites
     - Node.js (v18.x or higher)
     - A PostgreSQL instance (e.g., NeonDB)
 
-## 🏃 Step-by-Step Setup
- # Clone and Install
+# 🏃 Step-by-Step Setup
+ ## Clone and Install
     - git clone : https://github.com/shehabRabby/B7A2-Dev-Pulse.git
     - cd <your-project-folder>
     - npm install
 
- # Environment Configuration 
+ ## Environment Configuration 
    - PORT=5000
    - DATABASE_URL=postgres://<username>:<password>@<host>/<database_name>?sslmode=require
    - JWT_SECRET=your_super_secure_random_jwt_secret_key
    - NODE_ENV=development
 
- # Database Initialization
+ ## Database Initialization
    - Run the SQL scripts provided in the Database Schema section above inside your NeonDB SQL terminal to create the tables.
 
- # Running the Application
+ ## Running the Application
    - Development Mode: npm run dev
    - Build Project: npm run build
    - Production Start: npm start
 
 ---
 
-## 📋 Database Schema
+# 📋 Database Schema
 
 Execute the following relational blueprints inside your database console or NeonDB SQL editor to configure the architecture:
 

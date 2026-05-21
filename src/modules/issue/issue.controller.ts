@@ -21,7 +21,6 @@ const createIssue = async (
 
     // login user id from token
     const creatorId = req.user?.id;
-
   
     if (!issueData.title || !issueData.description || !issueData.type) {
       res.status(StatusCodes.BAD_REQUEST).json({
@@ -31,8 +30,7 @@ const createIssue = async (
       });
       return;
     }
-
-    
+ 
     if (issueData.title.length > 150) {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
@@ -172,7 +170,6 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
       loggedInUser,
       updateData,
     );
-
     
     if (result.errorType === "ISSUE_NOT_FOUND") {
       res.status(StatusCodes.NOT_FOUND).json({
@@ -214,7 +211,6 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
 
     const dbData = result.data;
 
-   
     if (!dbData) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
@@ -224,7 +220,6 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-   
     const formattedData = {
       id: dbData.id,
       title: dbData.title,
@@ -250,7 +245,6 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
 const deleteIssue = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-
     const isDeleted = await IssueServices.deleteIssueFromDB(id as string);
 
     if (!isDeleted) {
